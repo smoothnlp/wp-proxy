@@ -15,7 +15,7 @@ const custom_routes = config.custom_routes;
 
 const request = require("request-promise");
 const wp_routes_proxy = async (req, res) => {
-  const target_url = `${target_host}${req.originalUrl.replace(router_prefix, '')}`;
+  const target_url = `${target_host}${req.originalUrl.replace(router_prefix === '/' ? '' : router_prefix, '')}`;
   console.log(`>>> fetch target url: ${target_url}, from ${req.originalUrl}`);
   request(target_url).pipe(res);
   return;
@@ -39,11 +39,11 @@ const wp_sitemap_proxy = async (req, res) => {
   }
 
   // fetch sitemap
-  const target_url = `${target_host}${router_prefix}${req.originalUrl.replace(router_prefix, '').replace(wp_sitemap_route, '')}`;
+  const target_url = `${target_host}${req.originalUrl.replace(router_prefix === '/' ? '' : router_prefix, '').replace(wp_sitemap_route, '')}`;
   console.log(`>>> fetch sitemap: ${target_url}`);
   try {
     const sitemapContent = await request(target_url);
-    const updatedSitemapContent = sitemapContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}${wp_sitemap_route}`);
+    const updatedSitemapContent = sitemapContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`);
     res.send(updatedSitemapContent);
   } catch (error) {
     console.error(`Error fetching sitemap: ${error.message}`);

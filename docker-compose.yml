@@ -1,0 +1,11 @@
+version: '3'
+services: 
+  wp-proxy: 
+    image: wp-proxy:latest
+    ports:
+      - "8088:8088"
+    volumes:
+      # copy the config.toml to the container, 
+      # make sure the config.toml is in the same directory as the docker-compose.yml, or change the path to the correct one
+      - ./config.toml:/app/config.toml
+    restart: always

@@ -1,0 +1,26 @@
+port = 8088
+host = "0.0.0.0"
+
+# mounted_host: the host that the proxy will mount to
+# eg: https://mymap.ai
+mounted_host = "https://mymap.ai"
+
+# Target host: the host that the proxy will forward requests to
+# eg: https://library.mymap.ai
+target_host = "https://example.com"
+
+router_prefix = "/"
+
+# wp_routes: serve the wordpress resources for page rendering
+wp_resource_routes = [ "/wp-content", "/wp-includes" ]
+
+# wp_sitemap_route: serve the wordpress sitemap,
+# the default sitemap url is: {mounted_host}/wp_sitemap/index.xml
+wp_sitemap_route = "/wp_sitemap"
+
+# custom_routes: serve the custom resources
+custom_routes = [ 
+    "/(fr|es|ja|de|pt|zh_hans|zh_hant|ko)?\/?tool",
+    "/blog",
+    "/category" 
+]

@@ -22,8 +22,11 @@ const wp_routes_proxy = async (req, res) => {
 };
 
 const wp_sitemap_proxy = async (req, res) => {
-  if (req.originalUrl.endsWith(`${wp_sitemap_route}/index.xml`)) {
-    // list sitemap files
+    // if not sitemap xml, then proxy to wp_routes
+    if (!req.originalUrl.endsWith('xml')) return wp_routes_proxy(req, res);
+
+    if (req.originalUrl.endsWith(`${wp_sitemap_route}/index.xml`)) {
+      // list sitemap files
     const target_url = `${target_host}/sitemap_index.xml`;
     console.log(`>>> list sitemap files: ${target_url}`);
     try {

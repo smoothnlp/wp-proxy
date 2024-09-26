@@ -12,19 +12,25 @@ const target_host = config.target_host;
 const wp_resource_routes = config.wp_resource_routes;
 const wp_sitemap_route = config.wp_sitemap_route;
 const custom_routes = config.custom_routes;
+const replace_host_routes = config.replace_host_routes;
+
+const replace_host_routes_regex = replace_host_routes.map(route => new RegExp(route));
+const need_replace_host = (route) => {
+  return replace_host_routes_regex.some(regex => regex.test(route));
+}
 
 const request = require("request-promise");
 const wp_routes_proxy = async (req, res) => {
   const target_url = `${target_host}${req.originalUrl.replace(router_prefix === '/' ? '' : router_prefix, '')}`;
   console.log(`>>> fetch target url: ${target_url}, from ${req.originalUrl}`);
 
-  if (/^\/tool(\/)?$/.test(req.originalUrl)) {
+  if (need_replace_host(req.originalUrl)) {
     const pageContent = await request(target_url);
     const updatedPageContent = pageContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`);
     res.send(updatedPageContent);
     return;
   }
-  
+
   request(target_url).pipe(res);
   return;
 };

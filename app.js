@@ -17,7 +17,10 @@ const request = require("request-promise");
 const wp_routes_proxy = async (req, res) => {
   const target_url = `${target_host}${req.originalUrl.replace(router_prefix === '/' ? '' : router_prefix, '')}`;
   console.log(`>>> fetch target url: ${target_url}, from ${req.originalUrl}`);
-  request(target_url).pipe(res);
+
+  const pageContent = await request(target_url);
+  const updatedPageContent = pageContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`);
+  res.send(updatedPageContent);
   return;
 };
 

@@ -24,20 +24,23 @@ const wp_routes_proxy = async (req, res) => {
   const target_url = `${target_host}${req.originalUrl.replace(router_prefix === '/' ? '' : router_prefix, '')}`;
   console.log(`>>> fetch target url: ${target_url}, from ${req.originalUrl}`);
 
-  // if (need_replace_host(req.originalUrl)) {
-    // }
   try {
-    const pageContent = await request(target_url);
-    const updatedPageContent = pageContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`);
-    res.send(updatedPageContent);
+    let pageContent = await request(target_url);
+    
+    // 使用正则表达式替换链接，但排除 CSS 和 JS 文件
+    const linkRegex = new RegExp(`(href|src)=["'](${target_host}[^"']*?)["']`, 'g');
+    pageContent = pageContent.replace(linkRegex, (match, attr, url) => {
+      if (url.includes('.css') || url.includes('.js')) {
+        return match; // 不替换 CSS 和 JS 文件的链接
+      }
+      return `${attr}="${url.replace(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`)}"`;
+    });
+
+    res.send(pageContent);
   } catch (error) {
     console.error(`Error fetching target url: ${error.message}`);
     res.status(404).send('Not Found');
   }
-  return;
-
-  // request(target_url).pipe(res);
-  // return;
 };
 
 const wp_sitemap_proxy = async (req, res) => {

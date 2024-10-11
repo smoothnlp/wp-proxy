@@ -26,9 +26,14 @@ const wp_routes_proxy = async (req, res) => {
 
   // if (need_replace_host(req.originalUrl)) {
     // }
-  const pageContent = await request(target_url);
-  const updatedPageContent = pageContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`);
-  res.send(updatedPageContent);
+  try {
+    const pageContent = await request(target_url);
+    const updatedPageContent = pageContent.replaceAll(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`);
+    res.send(updatedPageContent);
+  } catch (error) {
+    console.error(`Error fetching target url: ${error.message}`);
+    res.status(404).send('Not Found');
+  }
   return;
 
   // request(target_url).pipe(res);

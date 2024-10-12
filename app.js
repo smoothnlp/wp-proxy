@@ -30,8 +30,9 @@ const wp_routes_proxy = async (req, res) => {
     // 使用正则表达式替换链接，但排除 CSS 和 JS 文件
     const linkRegex = new RegExp(`(href|src)=["'](${target_host}[^"']*?)["']`, 'g');
     pageContent = pageContent.replace(linkRegex, (match, attr, url) => {
+      // 不替换 CSS 和 JS 文件的链接
       if (url.includes('.css') || url.includes('.js')) {
-        return match; // 不替换 CSS 和 JS 文件的链接
+        return match;
       }
       return `${attr}="${url.replace(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`)}"`;
     });

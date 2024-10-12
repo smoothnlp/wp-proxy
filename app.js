@@ -44,6 +44,17 @@ const wp_routes_proxy = async (req, res) => {
   }
 };
 
+const wp_resource_proxy = async (req, res) => {
+  const target_url = `${target_host}${req.originalUrl.replace(router_prefix === '/' ? '' : router_prefix, '')}`;
+  console.log(`>>> fetch target url: ${target_url}, from ${req.originalUrl}`);
+  try {
+    request(target_url).pipe(res);
+  } catch (error) {
+    console.error(`Error fetching target url: ${error.message}`);
+    res.status(404).send('Not Found');
+  }
+};
+
 const wp_sitemap_proxy = async (req, res) => {
     // if not sitemap xml, then proxy to wp_routes
     if (!req.originalUrl.endsWith('xml')) return wp_routes_proxy(req, res);
@@ -85,7 +96,7 @@ router.get('/heartbeat', (req, res) => {
 
 
 // add wp_routes
-router.use(wp_resource_routes, wp_routes_proxy);
+router.use(wp_resource_routes, wp_resource_proxy);
 
 // add wp_sitemap_route
 router.use(wp_sitemap_route, wp_sitemap_proxy);

@@ -11,8 +11,14 @@ const mounted_host = config.mounted_host;
 const target_host = config.target_host;
 const wp_resource_routes = config.wp_resource_routes;
 const wp_sitemap_route = config.wp_sitemap_route;
-const custom_routes = config.custom_routes;
+// const custom_routes = config.custom_routes;
 const replace_host_routes = config.replace_host_routes;
+
+const custom_routes = [ 
+  "\/(fr|es|ja|de|pt|zh_hans|zh_hant|zh-hans|zh-hant|ko)?\/?tool",
+  "\/(fr|es|ja|de|pt|zh_hans|zh_hant|zh-hans|zh-hant|ko)?\/?blog",
+  "/category",
+]
 
 const replace_host_routes_regex = replace_host_routes.map(route => new RegExp(route));
 const need_replace_host = (route) => {

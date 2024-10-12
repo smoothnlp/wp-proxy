@@ -31,7 +31,7 @@ const wp_routes_proxy = async (req, res) => {
     const linkRegex = new RegExp(`(href|src)=["'](${target_host}[^"']*?)["']`, 'g');
     pageContent = pageContent.replace(linkRegex, (match, attr, url) => {
       // 不替换 CSS 和 JS 文件的链接
-      if (url.includes('.css') || url.includes('.js')) {
+      if (url.includes('.css') || url.includes('.js') || url.includes('wp-content') || url.includes('wp-includes')) {
         return match;
       }
       return `${attr}="${url.replace(target_host, `${mounted_host}${router_prefix === '/' ? '' : router_prefix}`)}"`;

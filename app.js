@@ -15,8 +15,8 @@ const wp_sitemap_route = config.wp_sitemap_route;
 const replace_host_routes = config.replace_host_routes;
 
 const custom_routes = [ 
-  "\/(fr|es|ja|de|pt|zh_hans|zh_hant|zh-hans|zh-hant|ko)?\/?tool",
-  "\/(fr|es|ja|de|pt|zh_hans|zh_hant|zh-hans|zh-hant|ko)?\/?blog",
+  "\/(fr|es|ja|de|pt|zh_hans|zh_hant|zh-hans|zh-hant|zh-TW|ko)?\/?tool",
+  "\/(fr|es|ja|de|pt|zh_hans|zh_hant|zh-hans|zh-hant|zh-TW|ko)?\/?blog",
   "/category",
 ]
 
